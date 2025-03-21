@@ -7,7 +7,7 @@ from pymongo import MongoClient
 
 
 def main():
-    mongo_url = st.secrets("MONGO_URI")
+    mongo_url = st.secrets["MONGO_URI"]
 
     df = load_data(mongo_url)
     st.set_page_config(page_title="EM-DAT Disaster Data Dashboard")
