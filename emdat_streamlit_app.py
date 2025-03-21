@@ -35,7 +35,7 @@ def sidebar(df):
 
     if tab == "📊 Disaster Data":
         st.title("📊 EM-DAT Disaster Data")
-        st.write("Data of this site were from [EM-DAT The International Disaster Database](https://www.emdat.be/)."
+        st.write("Data of this site were from [EM-DAT The International Disaster Database](https://www.emdat.be/). "
                  "Disaster data were being visualized to provide more understanding about disasters to the public.")
         show_df_table(df)
         pie_chart_disaster_type(df)
