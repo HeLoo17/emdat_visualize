@@ -1,0 +1,30 @@
+# Python-related
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.ipynb_checkpoints/
+
+# Environment files
+.env
+*.env
+
+# OS / IDE files
+.DS_Store
+.vscode/
+.idea/
+
+# Jupyter / temp data
+*.csv
+*.xlsx
+
+# Virtual env
+venv/
+.env/
+.env.bak/
+
+# Streamlit logs
+.streamlit/
+
+# Mongo config or secrets
+config/*.json
