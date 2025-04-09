@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import numpy as np
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
@@ -141,7 +142,7 @@ def to_numeric(value):
         num = float(value)
         return num
     except (ValueError, TypeError):
-        return value
+        return np.nan
 
 
 def streamlit(df):
