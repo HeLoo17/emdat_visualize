@@ -118,7 +118,7 @@ def line_graph_disaster_trend(df):
         st.write("⚠️ No Records found.")
     else:
         fig, ax = plt.subplots()
-        ax.plot(df_trend["timeline.start_year"], df_trend["count"], marker="o", linestyle="-", color="b")
+        ax.plot(df_trend["timeline.start_year"], df_trend["count"], linestyle="-", color="b")
         ax.set_title(f"Trend of {disaster_type} from {start_year} to {end_year}")
         ax.set_xlabel("Year")
         ax.set_ylabel("Number of Disasters")
