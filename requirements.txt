@@ -5,5 +5,3 @@ matplotlib
 pymongo
 plotly
 numpy
-os
-dotenv
