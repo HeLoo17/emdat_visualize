@@ -145,9 +145,5 @@ def to_numeric(value):
         return np.nan
 
 
-def streamlit(df):
-    pass
-
-
 if __name__ == "__main__":
     main()
