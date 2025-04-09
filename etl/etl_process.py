@@ -90,7 +90,7 @@ def transform_data(df):
                 "disaster_subtype": row["Disaster Subtype"],
                 "external_id": row["External IDs"],
                 "event_name": row["Event Name"],
-                "magnitude": row["Magnitude"],
+                "magnitude": to_numeric(row["Magnitude"]),
                 "magnitude_scale": row["Magnitude Scale"]
             },
             "location_info": {
