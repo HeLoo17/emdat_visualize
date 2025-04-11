@@ -28,10 +28,21 @@ def main():
         cleaned_df = clean_data(df)
 
         # Transform Data
+        print("Transforming data...")
         transformed_df = transform_data(cleaned_df)
+        print("Transforming data done.")
 
         # Load Data
-        collection.insert_many(transformed_df)
+        try:
+            print("Loading data...")
+            collection.delete_many({})  # wipe all existing documents
+            collection.insert_many(transformed_df, ordered=False)
+            print(f"Inserted {collection.count_documents({})} documents.")
+            print("Loading data done")
+
+        except Exception as e:
+            print("Failed to insert documents.")
+            print(f"Error: {e}")
 
     else:
         print("Missing environment variables. Please check your environment file.")
@@ -39,20 +50,23 @@ def main():
 
 # Format data from Excel
 def clean_data(df):
+    # Remove duplicates
+    df.drop_duplicates(subset="DisNo.", keep="first", inplace=True)
+
     # Drop unused columns
     df.drop(['Admin Units', 'Entry Date', 'Last Update', 'Origin', 'Associated Types',
              'Latitude', 'Longitude'], axis=1, inplace=True)
 
     # Dictionary to custom fill NaN values
-    fillna_values = {'External IDs': 'na', 'Event Name': 'na', 'Location': 'na', 'AID Contribution': 'na',
-                     'Magnitude': 'na', 'Magnitude Scale': 'na', 'River Basin': 'na', 'Start Month': 0, 'Start Day': 0,
+    fillna_values = {'External IDs': np.nan, 'Event Name': np.nan, 'Location': np.nan, 'AID Contribution': np.nan,
+                     'Magnitude': np.nan, 'Magnitude Scale': np.nan, 'River Basin': np.nan, 'Start Month': 0, 'Start Day': 0,
                      'End Month': 0, 'End Day': 0,
-                     'Total Deaths': 'na', 'No. Injured': 'na', 'No. Affected': 'na', 'No. Homeless': 'na',
-                     'Total Affected': 'na', 'Reconstruction Costs (\'000 US$)': 'na',
-                     'Insured Damage (\'000 US$)': 'na', 'Total Damage (\'000 US$)': 'na',
-                     'AID Contribution (\'000 US$)': 'na', 'CPI': 'na',
-                     'Reconstruction Costs, Adjusted (\'000 US$)': 'na', 'Insured Damage, Adjusted (\'000 US$)': 'na',
-                     'Total Damage, Adjusted (\'000 US$)': 'na'}
+                     'Total Deaths': np.nan, 'No. Injured': np.nan, 'No. Affected': np.nan, 'No. Homeless': np.nan,
+                     'Total Affected': np.nan, 'Reconstruction Costs (\'000 US$)': np.nan,
+                     'Insured Damage (\'000 US$)': np.nan, 'Total Damage (\'000 US$)': np.nan,
+                     'AID Contribution (\'000 US$)': np.nan, 'CPI': np.nan,
+                     'Reconstruction Costs, Adjusted (\'000 US$)': np.nan, 'Insured Damage, Adjusted (\'000 US$)': np.nan,
+                     'Total Damage, Adjusted (\'000 US$)': np.nan}
 
     df.fillna(fillna_values, inplace=True)
 
@@ -114,13 +128,13 @@ def transform_data(df):
                 "total_affected": to_numeric(row["Total Affected"]),
             },
             "financial_info": {
-                "aid_contribution_usd": to_numeric(row["AID Contribution (US$)"]),
-                "reconstruction_cost_usd": to_numeric(row["Reconstruction Costs (US$)"]),
-                "reconstruction_cost_usd_adjusted": to_numeric(row["Reconstruction Costs, Adjusted (US$)"]),
-                "insured_damage_usd": to_numeric(row["Insured Damage (US$)"]),
-                "insured_damage_usd_adjusted": to_numeric(row["Insured Damage, Adjusted (US$)"]),
-                "total_damage_usd": to_numeric(row["Total Damage (US$)"]),
-                "total_damage_usd_adjusted": to_numeric(row["Total Damage, Adjusted (US$)"]),
+                "aid_contribution_usd": to_numeric(row["AID Contribution (US$)"])*1000,
+                "reconstruction_cost_usd": to_numeric(row["Reconstruction Costs (US$)"])*1000,
+                "reconstruction_cost_usd_adjusted": to_numeric(row["Reconstruction Costs, Adjusted (US$)"])*1000,
+                "insured_damage_usd": to_numeric(row["Insured Damage (US$)"])*1000,
+                "insured_damage_usd_adjusted": to_numeric(row["Insured Damage, Adjusted (US$)"])*1000,
+                "total_damage_usd": to_numeric(row["Total Damage (US$)"])*1000,
+                "total_damage_usd_adjusted": to_numeric(row["Total Damage, Adjusted (US$)"])*1000,
                 "cpi": to_numeric(row["CPI"])
             },
             "timeline": {
